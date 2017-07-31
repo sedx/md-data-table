@@ -16,7 +16,7 @@ function mdSelect($compile, $parse) {
 
     self.id = getId(self.model);
 
-    if(tableCtrl.$$rowSelect && self.id) {
+    if(tableCtrl.rowSelect && self.id) {
       if(tableCtrl.$$hash.has(self.id)) {
         var index = tableCtrl.selected.indexOf(tableCtrl.$$hash.get(self.id));
 
@@ -44,6 +44,15 @@ function mdSelect($compile, $parse) {
         });
       }
     }
+
+      self.inSelected = function(selected){
+          return selected.some(function(item, index){
+              if (item[attrs.mdSelectId] === self.id){
+                selected[index] = self.model;
+                return true;
+              }
+          });
+      }
 
     self.isSelected = function () {
       if(!tableCtrl.$$rowSelect) {
@@ -137,7 +146,7 @@ function mdSelect($compile, $parse) {
 
       if(tableCtrl.$$hash.has(self.id)) {
         // check if the item has been deselected
-        if(selected.indexOf(tableCtrl.$$hash.get(self.id)) === -1) {
+        if(selected.indexOf(tableCtrl.$$hash.get(self.id)) === -1 || !self.inSelected(selected)) {
           tableCtrl.$$hash.purge(self.id);
         }
 
@@ -145,7 +154,7 @@ function mdSelect($compile, $parse) {
       }
 
       // check if the item has been selected
-      if(selected.indexOf(self.model) !== -1) {
+      if(selected.indexOf(self.model) !== -1 || self.inSelected(selected)) {
         tableCtrl.$$hash.update(self.id, self.model);
       }
     }

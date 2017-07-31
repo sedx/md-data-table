@@ -24,6 +24,10 @@ function Hash() {
   this.update = function (key, item) {
     keys[key] = item;
   };
+
+  this.all = function () {
+      return keys;
+  };
 }
 
 function mdTable() {
